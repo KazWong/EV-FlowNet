@@ -37,11 +37,25 @@ def test(sess,
     event_image = tf.reduce_sum(event_image_loader[:, :, :, :2], axis=-1, keepdims=True)
     flow_rgb, flow_norm, flow_ang_rad = flow_viz_tf(flow_dict['flow3'])
     color_wheel_rgb = draw_color_wheel_np(args.image_width, args.image_height)
+    
+    var_name_list = tf.global_variables()
+    var_name_list = [v for v in var_name_list if "vs/vs/decoder/conv2d_8/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/decoder/conv2d_9/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/decoder/conv2d_10/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/decoder/conv2d_11/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/decoder/conv2d_12/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/decoder/conv2d_13/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/decoder/conv2d_14/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/decoder/conv2d_15/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/transition/conv2d_4/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/transition/conv2d_5/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/transition/conv2d_6/" not in v.name]
+    var_name_list = [v for v in var_name_list if "vs/vs/transition/conv2d_7/" not in v.name]
 
     sess.run(tf.global_variables_initializer())
     sess.run(tf.local_variables_initializer())
     
-    saver = tf.train.Saver()
+    saver = tf.train.Saver(var_list=var_name_list)
     saver.restore(sess, args.load_path)
     
     coord = tf.train.Coordinator()
@@ -218,7 +232,8 @@ def main():
     args.load_path = tf.train.latest_checkpoint(os.path.join(args.load_path,
                                                              args.training_instance))
 
-    sess = tf.Session()
+    config = tf.ConfigProto(gpu_options=tf.GPUOptions(allow_growth=True))
+    sess = tf.Session(config=config)
     event_image_loader, prev_image_loader, next_image_loader, timestamp_loader, n_ima = get_loader(
         args.data_path,
         1,
