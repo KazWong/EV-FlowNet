@@ -1,3 +1,20 @@
+# Real time EV-FlowNet
+This modification is to run the model in real time. 
+
+### Requirements
+1. install rpg_dvs_ros
+2. python 3
+3. tensorflow 2.3.1
+
+### Run with Python preprocess
+1. rosrun rt_evfn node.py
+
+### Run with C++ preprocess
+1. roslaunch dvs_renderer dvxplorer_mono_2.launch
+2. Set dvxplorer x:192-447, y:112-367 | davis x:2-257, y:45-300
+3. rosrun rt_evfn node_with_c.py 
+4. rosrun rt_evfn plot.py
+
 # EV-FlowNet: Self-Supervised Optical Flow Estimation for Event-based Cameras
 ![Predicted flow from the MVSEC motorcycle sequence.](motorcycle_flow.png)  
 Left: subsampled flow overlaid on top of grayscale image. Right: predicted flow at each pixel with an event.
